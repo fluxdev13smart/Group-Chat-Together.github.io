@@ -5,8 +5,8 @@
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background: url('background.jpg') no-repeat center center fixed;
+    font-family: 'Arial', sans-serif;
+    background: url('https://source.unsplash.com/random/1920x1080') no-repeat center center fixed;
     background-size: cover;
     display: flex;
     justify-content: center;
@@ -40,7 +40,6 @@ body {
 
 .login-screen {
     text-align: center;
-    margin: auto;
 }
 
 .login-screen input[type="text"],
@@ -59,7 +58,6 @@ body {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: 0.3s;
 }
 
 .login-screen button:hover {
@@ -84,12 +82,6 @@ body {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin-right: 15px;
-}
-
-.chat-header h2 {
-    margin: 0;
-    font-size: 1.5rem;
 }
 
 .chat-box {
@@ -142,13 +134,8 @@ body {
     border-radius: 8px;
     margin-left: 10px;
     cursor: pointer;
-    transition: 0.3s;
 }
 
 .chat-input button:hover {
     background-color: #45a049;
-}
-
-.chat-box {
-    scroll-behavior: smooth;
 }
