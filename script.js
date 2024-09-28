@@ -12,6 +12,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
+const storage = firebase.storage();
 
 // Enter chat function
 function enterChat() {
@@ -23,15 +24,17 @@ function enterChat() {
         return;
     }
 
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('chat-room').style.display = 'block';
-
     const reader = new FileReader();
     reader.onload = function (e) {
         document.getElementById('profile-img').src = e.target.result;
     };
     reader.readAsDataURL(profilePicture);
     document.getElementById('user-name').textContent = displayName;
+
+    uploadProfilePicture(profilePicture, displayName);
+
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('chat-room').style.display = 'block';
 
     // Listen for new messages
     database.ref('messages').on('child_added', function(snapshot) {
@@ -40,10 +43,18 @@ function enterChat() {
     });
 }
 
+// Function to upload profile picture to Firebase Storage
+function uploadProfilePicture(file, displayName) {
+    const storageRef = storage.ref('profile_pictures/' + displayName);
+    storageRef.put(file).then(() => {
+        console.log('Profile picture uploaded.');
+    });
+}
+
 // Function to send message
 function sendMessage() {
     const message = document.getElementById('message').value;
-    const displayName = document.getElementById('user-name').textContent;
+    const displayName = document.getElementById('display-name').value; // Get the display name directly from the input
     const profilePicture = document.getElementById('profile-img').src;
 
     if (message.trim() === '') {
@@ -79,3 +90,4 @@ function addMessageToChat(name, message, profilePicture) {
     chatBox.appendChild(messageElement);
     chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the bottom
 }
+
