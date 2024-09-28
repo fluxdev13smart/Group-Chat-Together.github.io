@@ -8,6 +8,7 @@
     <!-- Firebase scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-storage.js"></script>
 </head>
 <body>
     <div class="blur-background"></div>
@@ -26,7 +27,7 @@
             </div>
             <div id="chat-box" class="chat-box"></div>
             <div class="chat-input">
-                <input type="text" id="message" placeholder="Type your message...">
+                <input type="text" id="message" placeholder="Type your message..." required>
                 <button onclick="sendMessage()">Send</button>
             </div>
         </div>
