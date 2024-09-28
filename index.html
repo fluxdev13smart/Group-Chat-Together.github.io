@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Chat Together</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* Reset styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://source.unsplash.com/random/1920x1080') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Background blur overlay */
+        .blur-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Chat container */
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 600px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+        }
+
+        /* Login/Welcome Screen */
+        .login-screen {
+            text-align: center;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .login-screen input[type="text"],
+        .login-screen input[type="file"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .login-screen button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        .login-screen button:hover {
+            background-color: #45a049;
+        }
+
+        /* Chat room */
+        .chat-room {
+            display: none;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .chat-header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Chatbox for messages */
+        .chat-box {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-box .message {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: flex-start;
+        }
+
+        .chat-box .message img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .chat-box .message .message-content {
+            background-color: #e1ffc7;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 70%;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Input area */
+        .chat-input {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .chat-input input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .chat-input button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .chat-input button:hover {
+            background-color: #45a049;
+        }
+
+        /* Styling for scrolling */
+        .chat-box {
+            scroll-behavior: smooth;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="blur-background"></div>
+
+    <div class="container">
+
+        <!-- Welcome/Login screen -->
+        <div class="login-screen" id="login-screen">
+            <h1>Welcome to Group Chat</h1>
+            <input type="text" id="display-name" placeholder="Enter your display name"><br>
+            <input type="file" id="profile-picture" accept="image/*"><br>
+            <button onclick="enterChat()">Start Chatting</button>
+        </div>
+
+        <!-- Chat room -->
+        <div class="chat-room" id="chat-room">
+            <div class="chat-header">
+                <img id="profile-img" alt="Profile Picture">
+                <h2 id="user-name">Display Name</h2>
+            </div>
+            
+            <!-- Chat messages area -->
+            <div class="chat-box" id="chat-box">
+                <!-- Placeholder for messages -->
+                <p>Welcome to the group chat! Start chatting now!</p>
+            </div>
+
+            <!-- Input area -->
+            <div class="chat-input">
+                <input type="text" id="message" placeholder="Type a message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        function enterChat() {
+            var displayName = document.getElementById('display-name').value;
+            var profilePicture = document.getElementById('profile-picture').files[0];
+
+            if (!displayName || !profilePicture) {
+                alert('Please enter your display name and choose a profile picture.');
+                return;
+            }
+
+            // Show the chat room and hide login screen
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('chat-room').style.display = 'block';
+
+            // Set user profile picture and name
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('profile-img').src = e.target.result;
+            };
+            reader.readAsDataURL(profilePicture);
+            document.getElementById('user-name').textContent = displayName;
+        }
+
+        function sendMessage() {
+            var message = document.getElementById('message').value;
+            var chatBox = document.getElementById('chat-box');
+            var displayName = document.getElementById('user-name').textContent;
+            var profilePicture = document.getElementById('profile-img').src;
+
+            if (message.trim() === '') {
+                alert('Please enter a message.');
+                return;
+            }
+
+            // Create message element
+            var messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+
+            // Add profile picture to message
+            var profileImgElement = document.createElement('img');
+            profileImgElement.src = profilePicture;
+            messageElement.appendChild(profileImgElement);
+
+            // Add message content
+            var messageContentElement = document.createElement('div');
+            messageContentElement.classList.add('message-content');
+            messageContentElement.textContent = displayName + ": " + message;
+            messageElement.appendChild(messageContentElement);
+
+            // Append the new message to the chat box
+            chatBox.appendChild(messageElement);
+
+            // Scroll to the bottom of the chat
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Clear the input field
+            document.getElementById('message').value = '';
+        }
+    </script>
+
+</body>
+</html>
